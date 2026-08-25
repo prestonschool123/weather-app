@@ -1,4 +1,4 @@
-// this is a test
+
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,17 +11,17 @@ builder.Services.AddCors(options =>
     });
 });
 
-// 1. Add HttpClient service
+
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
 app.UseCors("AllowFrontend");
 
-// 2. Fetch live data from WeatherAPI
+
 app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory) =>
 {
-    string apiKey = "YOUR_WEATHERAPI_KEY_HERE"; // Paste the key here
+    string apiKey = "0ce8922ee4dc4c3b981174603262108"; // Paste the key here
     string url = $"https://api.weatherapi.com/v1/current.json?key={apiKey}&q={city}";
 
     var client = clientFactory.CreateClient();
@@ -39,7 +39,7 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory)
         using var doc = JsonDocument.Parse(jsonString);
         var root = doc.RootElement;
 
-        // Extract specific fields returned by WeatherAPI
+        
         var result = new
         {
             cityName = root.GetProperty("location").GetProperty("name").GetString(),
