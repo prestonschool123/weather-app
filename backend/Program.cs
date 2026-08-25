@@ -1,4 +1,3 @@
-
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,17 +10,16 @@ builder.Services.AddCors(options =>
     });
 });
 
-
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
 app.UseCors("AllowFrontend");
 
-
+// 1. Existing endpoint for full weather data
 app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory) =>
 {
-    string apiKey = "0ce8922ee4dc4c3b981174603262108"; // Paste the key here
+    string apiKey = "0ce8922ee4dc4c3b981174603262108";
     string url = $"https://api.weatherapi.com/v1/current.json?key={apiKey}&q={city}";
 
     var client = clientFactory.CreateClient();
@@ -39,7 +37,6 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory)
         using var doc = JsonDocument.Parse(jsonString);
         var root = doc.RootElement;
 
-        
         var result = new
         {
             cityName = root.GetProperty("location").GetProperty("name").GetString(),
@@ -52,6 +49,32 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory)
     catch (Exception)
     {
         return Results.Problem("Error fetching weather data.");
+    }
+});
+
+// 2. NEW endpoint for dynamic city autocomplete suggestions
+app.MapGet("/api/weather/search", async (string query, IHttpClientFactory clientFactory) =>
+{
+    if (string.IsNullOrWhiteSpace(query) || query.Length < 2)
+    {
+        return Results.Ok(new object[] { });
+    }
+
+    string apiKey = "0ce8922ee4dc4c3b981174603262108";
+    string url = $"https://api.weatherapi.com/v1/search.json?key={apiKey}&q={query}";
+
+    var client = clientFactory.CreateClient();
+    try
+    {
+        var response = await client.GetAsync(url);
+        if (!response.IsSuccessStatusCode) return Results.Ok(new object[] { });
+
+        var jsonString = await response.Content.ReadAsStringAsync();
+        return Results.Content(jsonString, "application/json");
+    }
+    catch
+    {
+        return Results.Ok(new object[] { });
     }
 });
 
