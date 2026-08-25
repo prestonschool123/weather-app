@@ -1,0 +1,36 @@
+.search-container {
+  display: flex;
+  align-items: stretch; /* Ensures searchBtn and bookmarkBtn match input height */
+  gap: 8px;
+}
+
+.forecast-container {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+}
+
+.forecast-card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  min-width: 120px;
+}
+
+.bookmarks-section {
+  margin-top: 20px;
+}
+
+.bookmarks-container {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.bookmark-chip {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  border-radius: 16px;
+  cursor: pointer;
+}

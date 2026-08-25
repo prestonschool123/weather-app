@@ -13,14 +13,28 @@
 
         <!-- City Search and Enter -->
         <div class="search-container">
-            <input type="text" id="cityInput" placeholder="Enter City Name">
+            <input type="text" id="cityInput" list="citySuggestions" placeholder="Enter City Name" autocomplete="off">
+            <datalist id="citySuggestions"></datalist>
             <button id="searchBtn">Search</button>
+            <button id="bookmarkBtn">Bookmark</button>
         </div>
 
-        <div class="Weather Details">
+        <div class="weather-details">~
             <h2 id="cityName">--</h2>
             <p id="temperature">-- °F</p>
             <p id="condition">--</p>
+        </div>
+
+        <!-- Weekly Forecast Container -->
+        <div class="forecast-section">
+            <h3>Forecast</h3>
+            <div id="forecastContainer" class="forecast-container"></div>
+        </div>
+
+        <!-- Saved Cities Bookmarks Section (Moved to the bottom) -->
+        <div class="bookmarks-section">
+            <h3>Saved Cities</h3>
+            <div id="bookmarksContainer" class="bookmarks-container"></div>
         </div>
     </main>
     

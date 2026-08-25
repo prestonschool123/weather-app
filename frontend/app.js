@@ -2,11 +2,67 @@ console.log("app.js is connected and running!");
 
 // Assign the html ids
 const cityInput = document.getElementById('cityInput');
+const citySuggestions = document.getElementById('citySuggestions');
 const searchBtn = document.getElementById('searchBtn');
 const cityName = document.getElementById('cityName');
 const temperature = document.getElementById('temperature');
 const condition = document.getElementById('condition');
+const forecastContainer = document.getElementById('forecastContainer');
+const bookmarkBtn = document.getElementById('bookmarkBtn');
+const bookmarksContainer = document.getElementById('bookmarksContainer');
 
+// Track the active city and loaded bookmarks
+let currentCityName = '';
+let savedBookmarks = JSON.parse(localStorage.getItem('weatherBookmarks')) || [];
+
+// Render any existing saved bookmarks on page load
+renderBookmarks();
+
+// Helper function to fetch and display weather for any city name or coordinates
+async function fetchWeatherForCity(city) {
+  try {
+    const response = await fetch(`http://localhost:5203/api/weather?city=${encodeURIComponent(city)}`);
+    
+    if (!response.ok) {
+      throw new Error('City not found or server error');
+    }
+
+    const data = await response.json();
+
+    // Track city name for bookmarking
+    currentCityName = data.cityName;
+
+    // 1. Update current weather details
+    cityName.textContent = data.cityName;
+    temperature.textContent = `${data.temperature} °F`;
+    condition.textContent = data.condition;
+
+    // 2. Clear existing forecast cards and render new ones
+    forecastContainer.innerHTML = '';
+    
+    data.forecast.forEach(day => {
+      const dateObj = new Date(`${day.date}T00:00:00`); 
+      const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+
+      const dayCard = document.createElement('div');
+      dayCard.className = 'forecast-card';
+      dayCard.innerHTML = `
+        <p class="forecast-day"><strong>${dayOfWeek}</strong></p>
+        <p class="forecast-date">${day.date}</p>
+        <p class="forecast-temp">High: ${day.maxTemp} °F</p>
+        <p class="forecast-temp">Low: ${day.minTemp} °F</p>
+        <p class="forecast-cond">${day.condition}</p>
+      `;
+      forecastContainer.appendChild(dayCard);
+    });
+
+  } catch (error) {
+    console.error('Fetch error:', error);
+    alert('Could not get weather data. Check if backend is running!');
+  }
+}
+
+// Search input handler
 async function handleSearch() {
   const city = cityInput.value.trim();
 
@@ -15,34 +71,92 @@ async function handleSearch() {
     return;
   }
 
-  try {
-    // 1. Fetch data from your friend's C# server URL
-    // Note: Make sure the port (e.g. 5000) matches what printed in his terminal!
-    const response = await fetch(`http://localhost:5203/api/weather?city=${city}`);
+  await fetchWeatherForCity(city);
+
+  // Clear input box and suggestion list
+  cityInput.value = '';
+  citySuggestions.innerHTML = '';
+}
+
+// Render bookmark buttons into the container
+function renderBookmarks() {
+  bookmarksContainer.innerHTML = '';
+  
+  savedBookmarks.forEach(city => {
+    const btn = document.createElement('button');
+    btn.className = 'bookmark-chip';
+    btn.textContent = city;
     
-    if (!response.ok) {
-      throw new Error('City not found or server error');
-    }
+    // Search city when bookmark chip is clicked
+    btn.addEventListener('click', () => {
+      fetchWeatherForCity(city);
+    });
 
-    const data = await response.json();
+    bookmarksContainer.appendChild(btn);
+  });
+}
 
-    // 2. Update the HTML elements with the real data returned from C#
-    cityName.textContent = data.cityName;
-    temperature.textContent = `${data.temperature} °F`;
-    condition.textContent = data.condition;
-
-  } catch (error) {
-    console.error('Fetch error:', error);
-    alert('Could not get weather data. Check if backend is running!');
+// Save current city to bookmarks
+bookmarkBtn.addEventListener('click', () => {
+  if (!currentCityName) {
+    alert('Search for a city first before bookmarking!');
+    return;
   }
 
-  // Clear input box
-  cityInput.value = '';
-}
-//Search for input for city
+  if (!savedBookmarks.includes(currentCityName)) {
+    savedBookmarks.push(currentCityName);
+    localStorage.setItem('weatherBookmarks', JSON.stringify(savedBookmarks));
+    renderBookmarks();
+  }
+});
+
+// Fetch live suggestions as the user types
+cityInput.addEventListener('input', async () => {
+  const query = cityInput.value.trim();
+
+  if (query.length < 2) {
+    citySuggestions.innerHTML = '';
+    return;
+  }
+
+  try {
+    const response = await fetch(`http://localhost:5203/api/weather/search?query=${encodeURIComponent(query)}`);
+    if (!response.ok) return;
+
+    const matches = await response.json();
+
+    citySuggestions.innerHTML = '';
+
+    matches.forEach(item => {
+      const option = document.createElement('option');
+      option.value = `${item.name}, ${item.region}`;
+      citySuggestions.appendChild(option);
+    });
+  } catch (error) {
+    console.error('Error fetching suggestions:', error);
+  }
+});
+
+// Event listeners for searching
 searchBtn.addEventListener('click', handleSearch);
 cityInput.addEventListener('keypress', (event) => {
-    if (event.key === 'Enter') {
-        handleSearch();
-    }
-})
+  if (event.key === 'Enter') {
+    handleSearch();
+  }
+});
+
+// Automatically load weather based on user location when the page loads
+window.addEventListener('DOMContentLoaded', () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        fetchWeatherForCity(`${lat},${lon}`);
+      },
+      (error) => {
+        console.log("Geolocation permission denied or unavailable:", error.message);
+      }
+    );
+  }
+});
