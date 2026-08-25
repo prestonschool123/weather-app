@@ -21,7 +21,7 @@ app.UseCors("AllowFrontend");
 
 app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory) =>
 {
-    string apiKey = "0ce8922ee4dc4c3b981174603262108"; // Paste the key here
+    string apiKey = "0ce8922ee4dc4c3b981174603262108"; 
     string url = $"https://api.weatherapi.com/v1/current.json?key={apiKey}&q={city}";
 
     var client = clientFactory.CreateClient();
