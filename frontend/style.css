@@ -35,36 +35,19 @@
   cursor: pointer;
 }
 
-/* Base Fire Alert Banner */
-.fire-alert-banner {
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin: 15px 0;
-  text-align: left;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.fire-alert-banner h3 {
-  margin: 0 0 6px 0;
+/* Fire Status Simple Text */
+.fire-status-text {
   font-size: 1.1rem;
+  font-weight: bold;
+  margin: 15px 0 5px 0;
 }
 
-.fire-alert-banner p {
-  margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.3;
+/* Red Text for active warning */
+.fire-status-text.danger {
+  color: #d32f2f;
 }
 
-/* Fire Alert - Danger State (Active Warning) */
-.fire-alert-banner.danger {
-  background-color: #ff4d4d;
-  color: white;
-  border: 2px solid #cc0000;
-}
-
-/* Fire Alert - Safe State (No Active Warnings) */
-.fire-alert-banner.safe {
-  background-color: #2e7d32;
-  color: white;
-  border: 2px solid #1b5e20;
+/* Green Text for no warning */
+.fire-status-text.safe {
+  color: #2e7d32;
 }

@@ -11,10 +11,8 @@ const forecastContainer = document.getElementById('forecastContainer');
 const bookmarkBtn = document.getElementById('bookmarkBtn');
 const bookmarksContainer = document.getElementById('bookmarksContainer');
 
-// Fire Warning Banner elements
-const fireAlertBanner = document.getElementById('fireAlertBanner');
-const fireAlertTitle = document.getElementById('fireAlertTitle');
-const fireAlertDescription = document.getElementById('fireAlertDescription');
+// Fire Status Text element
+const fireStatusText = document.getElementById('fireStatusText');
 
 // Track the active city and loaded bookmarks
 let currentCityName = '';
@@ -42,18 +40,16 @@ async function fetchWeatherForCity(city) {
     temperature.textContent = `${data.temperature} °F`;
     condition.textContent = data.condition;
 
-    // 2. Handle Fire Warning Banner (Always visible: shows warning or safe state)
-    if (fireAlertBanner && data.fireDanger) {
-      fireAlertBanner.style.display = 'block';
+    // 2. Handle Fire Status Text
+    if (fireStatusText && data.fireDanger) {
+      fireStatusText.style.display = 'block';
 
       if (data.fireDanger.hasWarning) {
-        fireAlertBanner.className = 'fire-alert-banner danger';
-        fireAlertTitle.textContent = `🔥 ${data.fireDanger.eventName}`;
-        fireAlertDescription.textContent = data.fireDanger.description;
+        fireStatusText.className = 'fire-status-text danger';
+        fireStatusText.textContent = 'There is fire near here';
       } else {
-        fireAlertBanner.className = 'fire-alert-banner safe';
-        fireAlertTitle.textContent = `✅ Safe - ${data.fireDanger.eventName}`;
-        fireAlertDescription.textContent = data.fireDanger.description;
+        fireStatusText.className = 'fire-status-text safe';
+        fireStatusText.textContent = 'No fire near here';
       }
     }
 
