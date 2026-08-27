@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -18,7 +19,6 @@ namespace backend
 
         public FireAlertService()
         {
-            // Weather.gov requires a User-Agent header or it blocks the request
             if (!_httpClient.DefaultRequestHeaders.Contains("User-Agent"))
             {
                 _httpClient.DefaultRequestHeaders.Add("User-Agent", "(WeatherApp, contact@weatherapp.com)");
@@ -27,8 +27,10 @@ namespace backend
 
         public async Task<FireAlertDto> CheckFireAlertsAsync(double lat, double lon)
         {
-            // Query active alerts directly for these coordinates
-            string url = $"https://api.weather.gov/alerts/active?point={lat},{lon}";
+            // Format coordinates safely using InvariantCulture
+            string latStr = lat.ToString(CultureInfo.InvariantCulture);
+            string lonStr = lon.ToString(CultureInfo.InvariantCulture);
+            string url = $"https://api.weather.gov/alerts/active?point={latStr},{lonStr}";
 
             try
             {
@@ -41,7 +43,6 @@ namespace backend
                 string jsonString = await response.Content.ReadAsStringAsync();
                 using JsonDocument doc = JsonDocument.Parse(jsonString);
                 
-                // Check if any active alerts returned match fire conditions
                 if (doc.RootElement.TryGetProperty("features", out JsonElement features) && features.GetArrayLength() > 0)
                 {
                     foreach (JsonElement feature in features.EnumerateArray())
@@ -50,7 +51,6 @@ namespace backend
                         {
                             string eventName = props.GetProperty("event").GetString() ?? "";
 
-                            // Look for Red Flag Warnings or Fire Weather Watches
                             if (eventName.Contains("Red Flag", StringComparison.OrdinalIgnoreCase) || 
                                 eventName.Contains("Fire Weather", StringComparison.OrdinalIgnoreCase))
                             {
@@ -70,7 +70,6 @@ namespace backend
                 Console.WriteLine($"Error checking NWS fire alerts: {ex.Message}");
             }
 
-            // Default response if no fire warnings are active
             return new FireAlertDto 
             { 
                 HasFireWarning = false, 

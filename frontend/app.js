@@ -11,6 +11,11 @@ const forecastContainer = document.getElementById('forecastContainer');
 const bookmarkBtn = document.getElementById('bookmarkBtn');
 const bookmarksContainer = document.getElementById('bookmarksContainer');
 
+// Fire Warning Banner elements
+const fireAlertBanner = document.getElementById('fireAlertBanner');
+const fireAlertTitle = document.getElementById('fireAlertTitle');
+const fireAlertDescription = document.getElementById('fireAlertDescription');
+
 // Track the active city and loaded bookmarks
 let currentCityName = '';
 let savedBookmarks = JSON.parse(localStorage.getItem('weatherBookmarks')) || [];
@@ -37,24 +42,41 @@ async function fetchWeatherForCity(city) {
     temperature.textContent = `${data.temperature} °F`;
     condition.textContent = data.condition;
 
-    // 2. Clear existing forecast cards and render new ones
-    forecastContainer.innerHTML = '';
-    
-    data.forecast.forEach(day => {
-      const dateObj = new Date(`${day.date}T00:00:00`); 
-      const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+    // 2. Handle Fire Warning Banner (Always visible: shows warning or safe state)
+    if (fireAlertBanner && data.fireDanger) {
+      fireAlertBanner.style.display = 'block';
 
-      const dayCard = document.createElement('div');
-      dayCard.className = 'forecast-card';
-      dayCard.innerHTML = `
-        <p class="forecast-day"><strong>${dayOfWeek}</strong></p>
-        <p class="forecast-date">${day.date}</p>
-        <p class="forecast-temp">High: ${day.maxTemp} °F</p>
-        <p class="forecast-temp">Low: ${day.minTemp} °F</p>
-        <p class="forecast-cond">${day.condition}</p>
-      `;
-      forecastContainer.appendChild(dayCard);
-    });
+      if (data.fireDanger.hasWarning) {
+        fireAlertBanner.className = 'fire-alert-banner danger';
+        fireAlertTitle.textContent = `🔥 ${data.fireDanger.eventName}`;
+        fireAlertDescription.textContent = data.fireDanger.description;
+      } else {
+        fireAlertBanner.className = 'fire-alert-banner safe';
+        fireAlertTitle.textContent = `✅ Safe - ${data.fireDanger.eventName}`;
+        fireAlertDescription.textContent = data.fireDanger.description;
+      }
+    }
+
+    // 3. Clear existing forecast cards and render new ones
+    if (forecastContainer && data.forecast) {
+      forecastContainer.innerHTML = '';
+      
+      data.forecast.forEach(day => {
+        const dateObj = new Date(`${day.date}T00:00:00`); 
+        const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+
+        const dayCard = document.createElement('div');
+        dayCard.className = 'forecast-card';
+        dayCard.innerHTML = `
+          <p class="forecast-day"><strong>${dayOfWeek}</strong></p>
+          <p class="forecast-date">${day.date}</p>
+          <p class="forecast-temp">High: ${day.maxTemp} °F</p>
+          <p class="forecast-temp">Low: ${day.minTemp} °F</p>
+          <p class="forecast-cond">${day.condition}</p>
+        `;
+        forecastContainer.appendChild(dayCard);
+      });
+    }
 
   } catch (error) {
     console.error('Fetch error:', error);
@@ -75,11 +97,15 @@ async function handleSearch() {
 
   // Clear input box and suggestion list
   cityInput.value = '';
-  citySuggestions.innerHTML = '';
+  if (citySuggestions) {
+    citySuggestions.innerHTML = '';
+  }
 }
 
 // Render bookmark buttons into the container
 function renderBookmarks() {
+  if (!bookmarksContainer) return;
+  
   bookmarksContainer.innerHTML = '';
   
   savedBookmarks.forEach(city => {
@@ -97,53 +123,59 @@ function renderBookmarks() {
 }
 
 // Save current city to bookmarks
-bookmarkBtn.addEventListener('click', () => {
-  if (!currentCityName) {
-    alert('Search for a city first before bookmarking!');
-    return;
-  }
+if (bookmarkBtn) {
+  bookmarkBtn.addEventListener('click', () => {
+    if (!currentCityName) {
+      alert('Search for a city first before bookmarking!');
+      return;
+    }
 
-  if (!savedBookmarks.includes(currentCityName)) {
-    savedBookmarks.push(currentCityName);
-    localStorage.setItem('weatherBookmarks', JSON.stringify(savedBookmarks));
-    renderBookmarks();
-  }
-});
+    if (!savedBookmarks.includes(currentCityName)) {
+      savedBookmarks.push(currentCityName);
+      localStorage.setItem('weatherBookmarks', JSON.stringify(savedBookmarks));
+      renderBookmarks();
+    }
+  });
+}
 
 // Fetch live suggestions as the user types
-cityInput.addEventListener('input', async () => {
-  const query = cityInput.value.trim();
+if (cityInput && citySuggestions) {
+  cityInput.addEventListener('input', async () => {
+    const query = cityInput.value.trim();
 
-  if (query.length < 2) {
-    citySuggestions.innerHTML = '';
-    return;
-  }
+    if (query.length < 2) {
+      citySuggestions.innerHTML = '';
+      return;
+    }
 
-  try {
-    const response = await fetch(`http://localhost:5203/api/weather/search?query=${encodeURIComponent(query)}`);
-    if (!response.ok) return;
+    try {
+      const response = await fetch(`http://localhost:5203/api/weather/search?query=${encodeURIComponent(query)}`);
+      if (!response.ok) return;
 
-    const matches = await response.json();
+      const matches = await response.json();
 
-    citySuggestions.innerHTML = '';
+      citySuggestions.innerHTML = '';
 
-    matches.forEach(item => {
-      const option = document.createElement('option');
-      option.value = `${item.name}, ${item.region}`;
-      citySuggestions.appendChild(option);
-    });
-  } catch (error) {
-    console.error('Error fetching suggestions:', error);
-  }
-});
+      matches.forEach(item => {
+        const option = document.createElement('option');
+        option.value = `${item.name}, ${item.region}`;
+        citySuggestions.appendChild(option);
+      });
+    } catch (error) {
+      console.error('Error fetching suggestions:', error);
+    }
+  });
+}
 
 // Event listeners for searching
-searchBtn.addEventListener('click', handleSearch);
-cityInput.addEventListener('keypress', (event) => {
-  if (event.key === 'Enter') {
-    handleSearch();
-  }
-});
+if (searchBtn) searchBtn.addEventListener('click', handleSearch);
+if (cityInput) {
+  cityInput.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  });
+}
 
 // Automatically load weather based on user location when the page loads
 window.addEventListener('DOMContentLoaded', () => {

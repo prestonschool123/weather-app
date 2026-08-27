@@ -19,7 +19,13 @@
             <button id="bookmarkBtn">Bookmark</button>
         </div>
 
-        <div class="weather-details">~
+        <!-- Fire Warning / Safety Banner -->
+        <div id="fireAlertBanner" class="fire-alert-banner" style="display: none;">
+            <h3 id="fireAlertTitle"></h3>
+            <p id="fireAlertDescription"></p>
+        </div>
+
+        <div class="weather-details">
             <h2 id="cityName">--</h2>
             <p id="temperature">-- °F</p>
             <p id="condition">--</p>
@@ -31,7 +37,7 @@
             <div id="forecastContainer" class="forecast-container"></div>
         </div>
 
-        <!-- Saved Cities Bookmarks Section (Moved to the bottom) -->
+        <!-- Saved Cities Bookmarks Section -->
         <div class="bookmarks-section">
             <h3>Saved Cities</h3>
             <div id="bookmarksContainer" class="bookmarks-container"></div>
