@@ -71,13 +71,7 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory,
             forecast = forecastList,
             fireDanger = new
             {
-                hasWarning = fireAlert.HasFireWarning,
-                eventName = string.IsNullOrWhiteSpace(fireAlert.EventName) || fireAlert.EventName == "None" 
-                    ? "No Active Fire Warnings" 
-                    : fireAlert.EventName,
-                description = string.IsNullOrWhiteSpace(fireAlert.Description) 
-                    ? $"No active fire weather alerts or Red Flag warnings for {cityName}." 
-                    : fireAlert.Description
+                hasWarning = fireAlert.HasFireWarning
             }
         };
 
