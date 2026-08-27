@@ -27,14 +27,11 @@ C:\Users\hhs-compsci\weather-app\backend\obj\Debug\net10.0\refint\backend.dll
 C:\Users\hhs-compsci\weather-app\backend\obj\Debug\net10.0\backend.pdb
 C:\Users\hhs-compsci\weather-app\backend\obj\Debug\net10.0\backend.genruntimeconfig.cache
 C:\Users\hhs-compsci\weather-app\backend\obj\Debug\net10.0\ref\backend.dll
+C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\bin\Debug\net10.0\backend.exe
+C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\bin\Debug\net10.0\backend.dll
 C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\bin\Debug\net10.0\appsettings.Development.json
 C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\bin\Debug\net10.0\appsettings.json
 C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\bin\Debug\net10.0\backend.staticwebassets.endpoints.json
-C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\bin\Debug\net10.0\backend.exe
-C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\bin\Debug\net10.0\backend.deps.json
-C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\bin\Debug\net10.0\backend.runtimeconfig.json
-C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\bin\Debug\net10.0\backend.dll
-C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\bin\Debug\net10.0\backend.pdb
 C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\obj\Debug\net10.0\rpswa.dswa.cache.json
 C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\obj\Debug\net10.0\backend.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\obj\Debug\net10.0\backend.AssemblyInfoInputs.cache
@@ -54,5 +51,8 @@ C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\obj\Debug\net10.0\swae
 C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\obj\Debug\net10.0\backend.dll
 C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\obj\Debug\net10.0\refint\backend.dll
 C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\obj\Debug\net10.0\backend.pdb
+C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\bin\Debug\net10.0\backend.deps.json
+C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\bin\Debug\net10.0\backend.runtimeconfig.json
+C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\bin\Debug\net10.0\backend.pdb
 C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\obj\Debug\net10.0\backend.genruntimeconfig.cache
 C:\Users\hhs-compsci\Documents\GitHub\weather-app\backend\obj\Debug\net10.0\ref\backend.dll
