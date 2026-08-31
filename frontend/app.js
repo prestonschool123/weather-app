@@ -140,30 +140,42 @@ if (bookmarkBtn) {
 
 // Fetch live suggestions as the user types
 if (cityInput && citySuggestions) {
+  let validMatches = [];
+
+  // Handle typing and fetching suggestions
   cityInput.addEventListener('input', async () => {
     const query = cityInput.value.trim();
-
     if (query.length < 2) {
       citySuggestions.innerHTML = '';
+      validMatches = [];
       return;
     }
 
     try {
-      // CHANGED: Replaced localhost URL with API_BASE_URL
-      const response = await fetch(`${API_BASE_URL}/api/weather/search?query=${encodeURIComponent(query)}`);
+      const response = await fetch(`http://localhost:5203/api/weather/search?query=${encodeURIComponent(query)}`);
       if (!response.ok) return;
 
       const matches = await response.json();
-
+      validMatches = matches.map(item => `${item.name}, ${item.region}`);
       citySuggestions.innerHTML = '';
 
-      matches.forEach(item => {
+      validMatches.forEach(cityString => {
         const option = document.createElement('option');
-        option.value = `${item.name}, ${item.region}`;
+        option.value = cityString;
         citySuggestions.appendChild(option);
       });
     } catch (error) {
       console.error('Error fetching suggestions:', error);
+    }
+  });
+
+  // Handle selection using the 'change' event (standard for datalists)
+  cityInput.addEventListener('change', () => {
+    const currentValue = cityInput.value;
+    if (validMatches.includes(currentValue)) {
+      citySuggestions.innerHTML = '';
+      validMatches = []; // Clear so it doesn't re-trigger
+      handleSearch();
     }
   });
 }
