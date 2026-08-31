@@ -1,7 +1,22 @@
 using System.Text.Json;
 using backend;
 
-var builder = WebApplication.CreateBuilder(args);
+// Disable reloadOnChange to prevent inotify instance limits on cloud hosts like Render
+var builderOptions = new WebApplicationOptions
+{
+    Args = args
+};
+
+var builder = WebApplication.CreateBuilder(builderOptions);
+
+builder.Configuration.Sources.Clear();
+builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
+{
+    var env = hostingContext.HostingEnvironment;
+    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
+          .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: false)
+          .AddEnvironmentVariables();
+});
 
 builder.Services.AddCors(options =>
 {
