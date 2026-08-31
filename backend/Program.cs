@@ -1,7 +1,9 @@
 using System.Text.Json;
 using backend;
 
-// Disable reloadOnChange to prevent inotify instance limits on cloud hosts like Render
+// Disable file watchers globally before builder initialization to prevent inotify crashes on cloud environments
+Environment.SetEnvironmentVariable("DOTNET_USE_POLLING_FILE_WATCHER", "true");
+
 var builderOptions = new WebApplicationOptions
 {
     Args = args
@@ -9,14 +11,12 @@ var builderOptions = new WebApplicationOptions
 
 var builder = WebApplication.CreateBuilder(builderOptions);
 
+// Clear default configuration sources and add them without file reloading
 builder.Configuration.Sources.Clear();
-builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
-{
-    var env = hostingContext.HostingEnvironment;
-    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
-          .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: false)
-          .AddEnvironmentVariables();
-});
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: false)
+    .AddEnvironmentVariables();
 
 builder.Services.AddCors(options =>
 {
