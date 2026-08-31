@@ -1,0 +1,16 @@
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor and IDE configurations
+.vscode/
+.idea/
+
+# Environment variables (if added later)
+.env
+.env.local
+
+# Node dependencies and build output (if using npm/bundlers later)
+node_modules/
+dist/
+build/
