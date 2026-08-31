@@ -1,5 +1,8 @@
 console.log("app.js is connected and running!");
 
+// Define backend host URL
+const API_BASE_URL = 'https://weather-app-backend-sorh.onrender.com';
+
 // Assign the html ids
 const cityInput = document.getElementById('cityInput');
 const citySuggestions = document.getElementById('citySuggestions');
@@ -24,7 +27,8 @@ renderBookmarks();
 // Helper function to fetch and display weather for any city name or coordinates
 async function fetchWeatherForCity(city) {
   try {
-    const response = await fetch(`http://localhost:5203/api/weather?city=${encodeURIComponent(city)}`);
+    // CHANGED: Replaced localhost URL with API_BASE_URL
+    const response = await fetch(`${API_BASE_URL}/api/weather?city=${encodeURIComponent(city)}`);
     
     if (!response.ok) {
       throw new Error('City not found or server error');
@@ -145,7 +149,8 @@ if (cityInput && citySuggestions) {
     }
 
     try {
-      const response = await fetch(`http://localhost:5203/api/weather/search?query=${encodeURIComponent(query)}`);
+      // CHANGED: Replaced localhost URL with API_BASE_URL
+      const response = await fetch(`${API_BASE_URL}/api/weather/search?query=${encodeURIComponent(query)}`);
       if (!response.ok) return;
 
       const matches = await response.json();
