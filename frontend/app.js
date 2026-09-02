@@ -63,7 +63,7 @@ async function fetchWeatherForCity(city) {
       
       data.forecast.forEach(day => {
         const dateObj = new Date(`${day.date}T00:00:00`); 
-        const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+        const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
 
         const dayCard = document.createElement('div');
         dayCard.className = 'forecast-card';
