@@ -152,7 +152,7 @@ if (cityInput && citySuggestions) {
     }
 
     try {
-      const response = await fetch(`http://localhost:5203/api/weather/search?query=${encodeURIComponent(query)}`);
+      const response = await fetch(`${API_BASE_URL}/api/weather/search?query=${encodeURIComponent(query)}`);
       if (!response.ok) return;
 
       const matches = await response.json();

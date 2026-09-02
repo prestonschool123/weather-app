@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !^/frontend/
+RewriteRule ^(.*)$ /frontend/$1 [L]
