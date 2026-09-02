@@ -37,7 +37,7 @@ app.UseCors("AllowFrontend");
 app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory, FireAlertService fireService) =>
 {
     string apiKey = "0ce8922ee4dc4c3b981174603262108"; 
-    string weatherApiUrl = $"https://api.weatherapi.com/v1/forecast.json?key={apiKey}&q={city}&days=7";
+    string weatherApiUrl = $"https://api.weatherapi.com/v1/forecast.json?key={apiKey}&q={city}&days=5";
 
     var client = clientFactory.CreateClient();
 
