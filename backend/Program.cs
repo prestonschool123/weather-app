@@ -57,6 +57,7 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory,
         var tempF = root.GetProperty("current").GetProperty("temp_f").GetDouble();
         var feelsLikeF = root.GetProperty("current").GetProperty("feelslike_f").GetDouble();
         var conditionText = root.GetProperty("current").GetProperty("condition").GetProperty("text").GetString();
+        var currentDate = root.GetProperty("location").GetProperty("localtime").GetString()?.Split(' ')[0];
 
         double lat = root.GetProperty("location").GetProperty("lat").GetDouble();
         double lon = root.GetProperty("location").GetProperty("lon").GetDouble();
@@ -68,8 +69,14 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory,
         var forecastList = new List<object>();
         var forecastDays = root.GetProperty("forecast").GetProperty("forecastday");
 
+        var dayIndex = 0;
         foreach (var day in forecastDays.EnumerateArray())
         {
+            if (dayIndex >= 3)
+            {
+                break;
+            }
+
             double avgFeelsLike = 0;
             int feelsLikeCount = 0;
 
@@ -90,14 +97,19 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory,
                 avgFeelsLike /= feelsLikeCount;
             }
 
+            var forecastDate = day.GetProperty("date").GetString();
+            var dayFeelsLike = (forecastDate == currentDate) ? feelsLikeF : avgFeelsLike;
+
             forecastList.Add(new
             {
-                date = day.GetProperty("date").GetString(),
+                date = forecastDate,
                 maxTemp = day.GetProperty("day").GetProperty("maxtemp_f").GetDouble(),
                 minTemp = day.GetProperty("day").GetProperty("mintemp_f").GetDouble(),
-                feelsLike = avgFeelsLike,
+                feelsLike = dayFeelsLike,
                 condition = day.GetProperty("day").GetProperty("condition").GetProperty("text").GetString()
             });
+
+            dayIndex++;
         }
 
         var result = new

@@ -32,6 +32,16 @@ function setSearchStatus(message) {
   searchStatus.innerHTML = message ? `<span class="loading-spinner" aria-hidden="true"></span>${message}` : '';
 }
 
+function getForecastDayLabel(dateString) {
+  if (!dateString) return 'N/A';
+
+  const utcDate = new Date(`${dateString}T12:00:00Z`);
+  return new Intl.DateTimeFormat('en-US', {
+    weekday: 'short',
+    timeZone: 'UTC'
+  }).format(utcDate);
+}
+
 // Render any existing saved bookmarks on page load
 renderBookmarks();
 
@@ -83,17 +93,19 @@ async function fetchWeatherForCity(city) {
       forecastContainer.innerHTML = '';
       
       data.forecast.forEach(day => {
-        const dateObj = new Date(`${day.date}T00:00:00`); 
-        const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
+        const dayOfWeek = getForecastDayLabel(day.date);
+        const roundedHigh = Number(day.maxTemp).toFixed(1);
+        const roundedLow = Number(day.minTemp).toFixed(1);
+        const roundedFeelsLike = Number(day.feelsLike).toFixed(1);
 
         const dayCard = document.createElement('div');
         dayCard.className = 'forecast-card';
         dayCard.innerHTML = `
           <p class="forecast-day"><strong>${dayOfWeek}</strong></p>
           <p class="forecast-date">${day.date}</p>
-          <p class="forecast-temp">High: ${day.maxTemp} °F</p>
-          <p class="forecast-temp">Low: ${day.minTemp} °F</p>
-          <p class="forecast-temp">Feels like: ${day.feelsLike} °F</p>
+          <p class="forecast-temp">High: ${roundedHigh} °F</p>
+          <p class="forecast-temp">Low: ${roundedLow} °F</p>
+          <p class="forecast-temp">Feels like: ${roundedFeelsLike} °F</p>
           <p class="forecast-cond">${day.condition}</p>
         `;
         forecastContainer.appendChild(dayCard);
