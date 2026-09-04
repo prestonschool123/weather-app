@@ -55,6 +55,7 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory,
 
         var cityName = root.GetProperty("location").GetProperty("name").GetString();
         var tempF = root.GetProperty("current").GetProperty("temp_f").GetDouble();
+        var feelsLikeF = root.GetProperty("current").GetProperty("feelslike_f").GetDouble();
         var conditionText = root.GetProperty("current").GetProperty("condition").GetProperty("text").GetString();
 
         double lat = root.GetProperty("location").GetProperty("lat").GetDouble();
@@ -69,11 +70,32 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory,
 
         foreach (var day in forecastDays.EnumerateArray())
         {
+            double avgFeelsLike = 0;
+            int feelsLikeCount = 0;
+
+            if (day.TryGetProperty("hour", out JsonElement hourlyForecast))
+            {
+                foreach (var hour in hourlyForecast.EnumerateArray())
+                {
+                    if (hour.TryGetProperty("feelslike_f", out JsonElement hourlyFeelsLike))
+                    {
+                        avgFeelsLike += hourlyFeelsLike.GetDouble();
+                        feelsLikeCount++;
+                    }
+                }
+            }
+
+            if (feelsLikeCount > 0)
+            {
+                avgFeelsLike /= feelsLikeCount;
+            }
+
             forecastList.Add(new
             {
                 date = day.GetProperty("date").GetString(),
                 maxTemp = day.GetProperty("day").GetProperty("maxtemp_f").GetDouble(),
                 minTemp = day.GetProperty("day").GetProperty("mintemp_f").GetDouble(),
+                feelsLike = avgFeelsLike,
                 condition = day.GetProperty("day").GetProperty("condition").GetProperty("text").GetString()
             });
         }
@@ -82,6 +104,7 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory,
         {
             cityName = cityName,
             temperature = tempF,
+            feelsLike = feelsLikeF,
             condition = conditionText,
             forecast = forecastList,
             fireDanger = new

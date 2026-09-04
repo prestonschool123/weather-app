@@ -9,6 +9,7 @@ const citySuggestions = document.getElementById('citySuggestions');
 const searchBtn = document.getElementById('searchBtn');
 const cityName = document.getElementById('cityName');
 const temperature = document.getElementById('temperature');
+const feelsLike = document.getElementById('feelsLike');
 const condition = document.getElementById('condition');
 const forecastContainer = document.getElementById('forecastContainer');
 const bookmarkBtn = document.getElementById('bookmarkBtn');
@@ -61,6 +62,7 @@ async function fetchWeatherForCity(city) {
     // 1. Update current weather details
     cityName.textContent = data.cityName;
     temperature.textContent = `${data.temperature} °F`;
+    feelsLike.textContent = `Feels like: ${data.feelsLike} °F`;
     condition.textContent = data.condition;
 
     // 2. Handle Fire Status Text
@@ -91,6 +93,7 @@ async function fetchWeatherForCity(city) {
           <p class="forecast-date">${day.date}</p>
           <p class="forecast-temp">High: ${day.maxTemp} °F</p>
           <p class="forecast-temp">Low: ${day.minTemp} °F</p>
+          <p class="forecast-temp">Feels like: ${day.feelsLike} °F</p>
           <p class="forecast-cond">${day.condition}</p>
         `;
         forecastContainer.appendChild(dayCard);
