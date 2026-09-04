@@ -71,7 +71,10 @@ async function fetchWeatherForCity(city) {
 
     // 1. Update current weather details
     cityName.textContent = data.cityName;
-    temperature.textContent = `${data.temperature} °F`;
+    const todayForecast = data.forecast?.[0];
+    const todayHigh = todayForecast ? Number(todayForecast.maxTemp).toFixed(1) : '--';
+    const todayLow = todayForecast ? Number(todayForecast.minTemp).toFixed(1) : '--';
+    temperature.textContent = `${data.temperature} °F | High: ${todayHigh} °F | Low: ${todayLow} °F`;
     feelsLike.textContent = `Feels like: ${data.feelsLike} °F`;
     condition.textContent = data.condition;
 
