@@ -13,6 +13,7 @@ const condition = document.getElementById('condition');
 const forecastContainer = document.getElementById('forecastContainer');
 const bookmarkBtn = document.getElementById('bookmarkBtn');
 const bookmarksContainer = document.getElementById('bookmarksContainer');
+const searchStatus = document.getElementById('searchStatus');
 
 // Fire Status Text element
 const fireStatusText = document.getElementById('fireStatusText');
@@ -20,12 +21,30 @@ const fireStatusText = document.getElementById('fireStatusText');
 // Track the active city and loaded bookmarks
 let currentCityName = '';
 let savedBookmarks = JSON.parse(localStorage.getItem('weatherBookmarks')) || [];
+let weatherRequestId = 0;
+let loadingMessageTimer;
+
+function setSearchStatus(message) {
+  if (!searchStatus) return;
+
+  searchStatus.hidden = !message;
+  searchStatus.innerHTML = message ? `<span class="loading-spinner" aria-hidden="true"></span>${message}` : '';
+}
 
 // Render any existing saved bookmarks on page load
 renderBookmarks();
 
 // Helper function to fetch and display weather for any city name or coordinates
 async function fetchWeatherForCity(city) {
+  const requestId = ++weatherRequestId;
+  setSearchStatus('Waking up the weather service...');
+  clearTimeout(loadingMessageTimer);
+  loadingMessageTimer = setTimeout(() => {
+    if (requestId === weatherRequestId) {
+      setSearchStatus('The weather service is taking a little longer to start. Still waiting...');
+    }
+  }, 4000);
+
   try {
     // CHANGED: Replaced localhost URL with API_BASE_URL
     const response = await fetch(`${API_BASE_URL}/api/weather?city=${encodeURIComponent(city)}`);
@@ -80,7 +99,17 @@ async function fetchWeatherForCity(city) {
 
   } catch (error) {
     console.error('Fetch error:', error);
+    if (requestId === weatherRequestId) {
+      setSearchStatus('Unable to reach the weather service. Please try again.');
+    }
     alert('Could not get weather data. Check if backend is running!');
+  } finally {
+    if (requestId === weatherRequestId) {
+      clearTimeout(loadingMessageTimer);
+      if (!searchStatus?.textContent.startsWith('Unable')) {
+        setSearchStatus('');
+      }
+    }
   }
 }
 
