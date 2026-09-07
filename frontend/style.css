@@ -47,14 +47,14 @@
   overflow-x: auto;
 }
 
-.forecast-heading {
+.current-wind-row {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.forecast-heading h3 {
-  margin-right: auto;
+.current-wind-row p {
+  margin: 0;
 }
 
 .forecast-card {
@@ -97,4 +97,96 @@
 /* Green Text for no warning */
 .fire-status-text.safe {
   color: #2e7d32;
+}
+
+.temperature-section {
+  margin-top: 24px;
+}
+
+.section-heading-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.section-heading-row h3 {
+  margin-bottom: 8px;
+}
+
+.chart-unit {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.temperature-chart {
+  position: relative;
+  min-height: 260px;
+  overflow: hidden;
+  border: 1px solid #d8d8d8;
+  background: linear-gradient(180deg, #fff8ef 0%, #fff 100%);
+}
+
+.temperature-chart svg {
+  display: block;
+  width: 100%;
+  height: 260px;
+}
+
+.chart-line {
+  fill: none;
+  stroke: #f97316;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 4;
+}
+
+.chart-area {
+  fill: url(#temperatureArea);
+}
+
+.chart-grid-line {
+  stroke: #e8dfd6;
+  stroke-dasharray: 4 6;
+}
+
+.chart-axis-label {
+  fill: #756c65;
+  font-size: 12px;
+}
+
+.chart-hit-area {
+  fill: transparent;
+  cursor: crosshair;
+}
+
+.chart-guide {
+  stroke: #f97316;
+  stroke-dasharray: 3 4;
+  stroke-width: 1.5;
+}
+
+.chart-dot {
+  fill: #fff;
+  stroke: #f97316;
+  stroke-width: 3;
+}
+
+.chart-tooltip {
+  position: absolute;
+  z-index: 1;
+  padding: 7px 9px;
+  border-radius: 4px;
+  background: #27211d;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  white-space: nowrap;
+}
+
+.chart-empty {
+  padding: 24px;
+  color: #666;
 }

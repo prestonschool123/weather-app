@@ -31,21 +31,31 @@
                 <h2 id="cityName">--</h2>
                 <p id="temperature">-- °F</p>
                 <p id="feelsLike">Feels like: -- °F</p>
-                <p id="currentWind">Wind: -- mph</p>
+                <div class="current-wind-row">
+                    <p id="currentWind">Wind: -- mph</p>
+                    <label for="windUnit">Wind units</label>
+                    <select id="windUnit">
+                        <option value="mph">mph</option>
+                        <option value="kph">kph</option>
+                    </select>
+                </div>
                 <p id="condition">--</p>
             </div>
         </div>
 
+        <section class="temperature-section" aria-labelledby="temperatureHeading">
+            <div class="section-heading-row">
+                <h3 id="temperatureHeading">Today's temperature</h3>
+                <span class="chart-unit">°F</span>
+            </div>
+            <div id="temperatureChart" class="temperature-chart" role="img" aria-label="Today's temperature by hour">
+                <p class="chart-empty">Search for a city to see today's temperature.</p>
+            </div>
+        </section>
+
         <!-- Weekly Forecast Container -->
         <div class="forecast-section">
-            <div class="forecast-heading">
-                <h3>Forecast</h3>
-                <label for="windUnit">Wind units</label>
-                <select id="windUnit">
-                    <option value="mph">mph</option>
-                    <option value="kph">kph</option>
-                </select>
-            </div>
+            <h3>Forecast</h3>
             <div id="forecastContainer" class="forecast-container"></div>
         </div>
 

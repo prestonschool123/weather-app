@@ -72,6 +72,7 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory,
 
         // Parse 7-day forecast array
         var forecastList = new List<object>();
+        var hourlyTemperatureList = new List<object>();
         var forecastDays = root.GetProperty("forecast").GetProperty("forecastday");
 
         var dayIndex = 0;
@@ -93,6 +94,15 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory,
                     {
                         avgFeelsLike += hourlyFeelsLike.GetDouble();
                         feelsLikeCount++;
+                    }
+
+                    if (dayIndex == 0 && hour.TryGetProperty("time", out JsonElement hourTime) && hour.TryGetProperty("temp_f", out JsonElement hourTemperature))
+                    {
+                        hourlyTemperatureList.Add(new
+                        {
+                            time = hourTime.GetString(),
+                            temperature = hourTemperature.GetDouble()
+                        });
                     }
                 }
             }
@@ -130,6 +140,7 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory,
             isDay = isDay,
             localTime = localTime,
             timeZone = timeZone,
+            hourlyTemperatures = hourlyTemperatureList,
             forecast = forecastList,
             fireDanger = new
             {
