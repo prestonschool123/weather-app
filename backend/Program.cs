@@ -56,6 +56,8 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory,
         var cityName = root.GetProperty("location").GetProperty("name").GetString();
         var tempF = root.GetProperty("current").GetProperty("temp_f").GetDouble();
         var feelsLikeF = root.GetProperty("current").GetProperty("feelslike_f").GetDouble();
+        var windMph = root.GetProperty("current").GetProperty("wind_mph").GetDouble();
+        var windKph = root.GetProperty("current").GetProperty("wind_kph").GetDouble();
         var conditionText = root.GetProperty("current").GetProperty("condition").GetProperty("text").GetString();
         var isDay = root.GetProperty("current").GetProperty("is_day").GetInt32() == 1;
         var localTime = root.GetProperty("location").GetProperty("localtime").GetString();
@@ -109,6 +111,8 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory,
                 maxTemp = day.GetProperty("day").GetProperty("maxtemp_f").GetDouble(),
                 minTemp = day.GetProperty("day").GetProperty("mintemp_f").GetDouble(),
                 feelsLike = dayFeelsLike,
+                windMph = day.GetProperty("day").GetProperty("maxwind_mph").GetDouble(),
+                windKph = day.GetProperty("day").GetProperty("maxwind_kph").GetDouble(),
                 condition = day.GetProperty("day").GetProperty("condition").GetProperty("text").GetString()
             });
 
@@ -120,6 +124,8 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory,
             cityName = cityName,
             temperature = tempF,
             feelsLike = feelsLikeF,
+            windMph = windMph,
+            windKph = windKph,
             condition = conditionText,
             isDay = isDay,
             localTime = localTime,

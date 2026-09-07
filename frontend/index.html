@@ -31,14 +31,21 @@
                 <h2 id="cityName">--</h2>
                 <p id="temperature">-- °F</p>
                 <p id="feelsLike">Feels like: -- °F</p>
+                <p id="currentWind">Wind: -- mph</p>
                 <p id="condition">--</p>
-                <img id="weatherImage" class="weather-image" alt="" hidden>
             </div>
         </div>
 
         <!-- Weekly Forecast Container -->
         <div class="forecast-section">
-            <h3>Forecast</h3>
+            <div class="forecast-heading">
+                <h3>Forecast</h3>
+                <label for="windUnit">Wind units</label>
+                <select id="windUnit">
+                    <option value="mph">mph</option>
+                    <option value="kph">kph</option>
+                </select>
+            </div>
             <div id="forecastContainer" class="forecast-container"></div>
         </div>
 
