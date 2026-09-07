@@ -1,3 +1,26 @@
+.app-heading {
+  display: block;
+}
+
+.app-heading h1 {
+  margin: 0;
+}
+
+.weather-image {
+  width: 180px;
+  height: 120px;
+  max-width: 100%;
+  display: block;
+  object-fit: contain;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-top: 12px;
+}
+
+.weather-details {
+  display: block;
+}
+
 .search-container {
   display: flex;
   align-items: stretch; /* Ensures searchBtn and bookmarkBtn match input height */

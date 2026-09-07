@@ -57,6 +57,9 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory,
         var tempF = root.GetProperty("current").GetProperty("temp_f").GetDouble();
         var feelsLikeF = root.GetProperty("current").GetProperty("feelslike_f").GetDouble();
         var conditionText = root.GetProperty("current").GetProperty("condition").GetProperty("text").GetString();
+        var isDay = root.GetProperty("current").GetProperty("is_day").GetInt32() == 1;
+        var localTime = root.GetProperty("location").GetProperty("localtime").GetString();
+        var timeZone = root.GetProperty("location").GetProperty("tz_id").GetString();
         var currentDate = root.GetProperty("location").GetProperty("localtime").GetString()?.Split(' ')[0];
 
         double lat = root.GetProperty("location").GetProperty("lat").GetDouble();
@@ -118,6 +121,9 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory,
             temperature = tempF,
             feelsLike = feelsLikeF,
             condition = conditionText,
+            isDay = isDay,
+            localTime = localTime,
+            timeZone = timeZone,
             forecast = forecastList,
             fireDanger = new
             {
