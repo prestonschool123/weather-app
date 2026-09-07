@@ -8,19 +8,19 @@
     "net10.0": []
   },
   "packageFolders": {
-    "C:\\Users\\hhs-compsci\\.nuget\\packages\\": {}
+    "C:\\Users\\Admin\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\hhs-compsci\\weather-app\\backend\\backend.csproj",
+      "projectUniqueName": "C:\\Users\\Admin\\weather-app\\backend\\backend.csproj",
       "projectName": "backend",
-      "projectPath": "C:\\Users\\hhs-compsci\\weather-app\\backend\\backend.csproj",
-      "packagesPath": "C:\\Users\\hhs-compsci\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\hhs-compsci\\weather-app\\backend\\obj\\",
+      "projectPath": "C:\\Users\\Admin\\weather-app\\backend\\backend.csproj",
+      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Admin\\weather-app\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\hhs-compsci\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -70,7 +70,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Users\\hhs-compsci\\.dotnet\\sdk\\10.0.400/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.400/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
