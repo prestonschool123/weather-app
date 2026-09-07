@@ -18,10 +18,15 @@
             <button id="searchBtn">Search</button>
             <button id="bookmarkBtn">Bookmark</button>
         </div>
+        <p id="searchStatus" class="search-status" role="status" aria-live="polite" hidden></p>
 
-        <div class="weather-details">~
+        <!-- Fire Status Text -->
+        <p id="fireStatusText" class="fire-status-text" style="display: none;"></p>
+
+        <div class="weather-details">
             <h2 id="cityName">--</h2>
             <p id="temperature">-- °F</p>
+            <p id="feelsLike">Feels like: -- °F</p>
             <p id="condition">--</p>
         </div>
 
@@ -31,7 +36,7 @@
             <div id="forecastContainer" class="forecast-container"></div>
         </div>
 
-        <!-- Saved Cities Bookmarks Section (Moved to the bottom) -->
+        <!-- Saved Cities Bookmarks Section -->
         <div class="bookmarks-section">
             <h3>Saved Cities</h3>
             <div id="bookmarksContainer" class="bookmarks-container"></div>

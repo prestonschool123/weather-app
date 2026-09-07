@@ -4,6 +4,31 @@
   gap: 8px;
 }
 
+.search-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.loading-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #ccc;
+  border-top-color: #333;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  flex: 0 0 auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .forecast-container {
   display: flex;
   gap: 10px;
@@ -33,4 +58,21 @@
   background-color: #f0f0f0;
   border-radius: 16px;
   cursor: pointer;
+}
+
+/* Fire Status Simple Text */
+.fire-status-text {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 15px 0 5px 0;
+}
+
+/* Red Text for active warning */
+.fire-status-text.danger {
+  color: #d32f2f;
+}
+
+/* Green Text for no warning */
+.fire-status-text.safe {
+  color: #2e7d32;
 }

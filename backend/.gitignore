@@ -1,0 +1,7 @@
+# Build and compiled outputs
+bin/
+obj/
+
+# User-specific configuration and local settings
+*.user
+appsettings.Development.json
