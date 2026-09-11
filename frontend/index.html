@@ -8,7 +8,9 @@
 </head>
 <body>
     <main class="weather-card">
-        <h1>Weather-App</h1>
+        <div class="app-heading">
+            <h1>Weather-App</h1>
+        </div>
         <p>Made by Jonny and Preston</p>
 
         <!-- City Search and Enter -->
@@ -18,15 +20,38 @@
             <button id="searchBtn">Search</button>
             <button id="bookmarkBtn">Bookmark</button>
         </div>
+        <p id="searchStatus" class="search-status" role="status" aria-live="polite" hidden></p>
+        <p id="locationHelp" class="location-help" hidden>Your current location is being loaded automatically. You do not need to type your city.</p>
 
         <!-- Fire Status Text -->
         <p id="fireStatusText" class="fire-status-text" style="display: none;"></p>
 
         <div class="weather-details">
-            <h2 id="cityName">--</h2>
-            <p id="temperature">-- °F</p>
-            <p id="condition">--</p>
+            <div class="weather-copy">
+                <h2 id="cityName">--</h2>
+                <p id="temperature">-- °F</p>
+                <p id="feelsLike">Feels like: -- °F</p>
+                <div class="current-wind-row">
+                    <p id="currentWind">Wind: -- mph</p>
+                    <label for="windUnit">Wind units</label>
+                    <select id="windUnit">
+                        <option value="mph">mph</option>
+                        <option value="kph">kph</option>
+                    </select>
+                </div>
+                <p id="condition">--</p>
+            </div>
         </div>
+
+        <section class="temperature-section" aria-labelledby="temperatureHeading">
+            <div class="section-heading-row">
+                <h3 id="temperatureHeading">Today's temperature</h3>
+                <span class="chart-unit">°F</span>
+            </div>
+            <div id="temperatureChart" class="temperature-chart" role="img" aria-label="Today's temperature by hour">
+                <p class="chart-empty">Search for a city to see today's temperature.</p>
+            </div>
+        </section>
 
         <!-- Weekly Forecast Container -->
         <div class="forecast-section">

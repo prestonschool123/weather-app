@@ -55,7 +55,14 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory,
 
         var cityName = root.GetProperty("location").GetProperty("name").GetString();
         var tempF = root.GetProperty("current").GetProperty("temp_f").GetDouble();
+        var feelsLikeF = root.GetProperty("current").GetProperty("feelslike_f").GetDouble();
+        var windMph = root.GetProperty("current").GetProperty("wind_mph").GetDouble();
+        var windKph = root.GetProperty("current").GetProperty("wind_kph").GetDouble();
         var conditionText = root.GetProperty("current").GetProperty("condition").GetProperty("text").GetString();
+        var isDay = root.GetProperty("current").GetProperty("is_day").GetInt32() == 1;
+        var localTime = root.GetProperty("location").GetProperty("localtime").GetString();
+        var timeZone = root.GetProperty("location").GetProperty("tz_id").GetString();
+        var currentDate = root.GetProperty("location").GetProperty("localtime").GetString()?.Split(' ')[0];
 
         double lat = root.GetProperty("location").GetProperty("lat").GetDouble();
         double lon = root.GetProperty("location").GetProperty("lon").GetDouble();
@@ -65,24 +72,75 @@ app.MapGet("/api/weather", async (string city, IHttpClientFactory clientFactory,
 
         // Parse 7-day forecast array
         var forecastList = new List<object>();
+        var hourlyTemperatureList = new List<object>();
         var forecastDays = root.GetProperty("forecast").GetProperty("forecastday");
 
+        var dayIndex = 0;
         foreach (var day in forecastDays.EnumerateArray())
         {
+            if (dayIndex >= 3)
+            {
+                break;
+            }
+
+            double avgFeelsLike = 0;
+            int feelsLikeCount = 0;
+
+            if (day.TryGetProperty("hour", out JsonElement hourlyForecast))
+            {
+                foreach (var hour in hourlyForecast.EnumerateArray())
+                {
+                    if (hour.TryGetProperty("feelslike_f", out JsonElement hourlyFeelsLike))
+                    {
+                        avgFeelsLike += hourlyFeelsLike.GetDouble();
+                        feelsLikeCount++;
+                    }
+
+                    if (dayIndex == 0 && hour.TryGetProperty("time", out JsonElement hourTime) && hour.TryGetProperty("temp_f", out JsonElement hourTemperature))
+                    {
+                        hourlyTemperatureList.Add(new
+                        {
+                            time = hourTime.GetString(),
+                            temperature = hourTemperature.GetDouble()
+                        });
+                    }
+                }
+            }
+
+            if (feelsLikeCount > 0)
+            {
+                avgFeelsLike /= feelsLikeCount;
+            }
+
+            var forecastDate = day.GetProperty("date").GetString();
+            var dayFeelsLike = (forecastDate == currentDate) ? feelsLikeF : avgFeelsLike;
+
             forecastList.Add(new
             {
-                date = day.GetProperty("date").GetString(),
+                date = forecastDate,
                 maxTemp = day.GetProperty("day").GetProperty("maxtemp_f").GetDouble(),
                 minTemp = day.GetProperty("day").GetProperty("mintemp_f").GetDouble(),
+                feelsLike = dayFeelsLike,
+                windMph = day.GetProperty("day").GetProperty("maxwind_mph").GetDouble(),
+                windKph = day.GetProperty("day").GetProperty("maxwind_kph").GetDouble(),
                 condition = day.GetProperty("day").GetProperty("condition").GetProperty("text").GetString()
             });
+
+            dayIndex++;
         }
 
         var result = new
         {
             cityName = cityName,
             temperature = tempF,
+            feelsLike = feelsLikeF,
+            windMph = windMph,
+            windKph = windKph,
             condition = conditionText,
+            isDay = isDay,
+            localTime = localTime,
+            timeZone = timeZone,
+            hourlyTemperatures = hourlyTemperatureList,
             forecast = forecastList,
             fireDanger = new
             {
