@@ -45,14 +45,20 @@ function renderWindAndForecast(data) {
 
   forecastContainer.innerHTML = '';
   data.forecast.forEach((day, dayIndex) => {
+    // 1. Skip today's forecast (index 0)
+    if (dayIndex === 0) return; 
+
     const dayOfWeek = getForecastDayLabel(day.date);
     const roundedHigh = Number(day.maxTemp).toFixed(1);
     const roundedLow = Number(day.minTemp).toFixed(1);
     const roundedFeelsLike = Number(day.feelsLike).toFixed(1);
-    const dayWindMph = dayIndex === 0 ? data.windMph : day.windMph;
-    const dayWindKph = dayIndex === 0 ? data.windKph : day.windKph;
+    
+    // Note: You can remove the conditional operators here since dayIndex is never 0 anymore
+    const dayWindMph = day.windMph;
+    const dayWindKph = day.windKph;
 
     const dayCard = document.createElement('div');
+
     dayCard.className = 'forecast-card';
     dayCard.innerHTML = `
       <p class="forecast-day"><strong>${dayOfWeek}</strong></p>
